@@ -1,68 +1,72 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Get all the necessary elements from the DOM
-    const downloadBtn = document.getElementById('download-btn');
+    // Get DOM elements
+    const purchaseBtns = document.querySelectorAll('.purchase-btn');
     const downloadModal = document.getElementById('download-modal');
-    const revealModal = document.getElementById('reveal-modal');
+    const errorModal = document.getElementById('error-modal');
     const modalBackdrop = document.getElementById('modal-backdrop');
-    const statusBar = document.getElementById('progress-bar');
+    const progressBar = document.getElementById('progress-bar');
     const statusText = document.getElementById('status-text');
-    const closeRevealBtn = document.getElementById('close-reveal-btn');
+    const uuidSpan = document.getElementById('uuid');
+    const closeErrorBtn = document.getElementById('close-error-btn');
 
-    // Define the simulation steps
+    // Simulation steps with more technical jargon
     const simulationSteps = [
-        { text: "Connecting to secure server...", duration: 1500, progress: 15 },
-        { text: "Authenticating user signature...", duration: 2000, progress: 30 },
-        { text: "Bypassing anti-cheat protocols...", duration: 2500, progress: 65 },
-        { text: "Generating unique download key...", duration: 1500, progress: 85 },
-        { text: "Preparing encrypted payload...", duration: 2000, progress: 100 },
-        { text: "DOWNLOAD FAILED: Human verification required.", duration: 1000, progress: 100 }
+        { text: "Validating access plan...", duration: 1500, progress: 10 },
+        { text: "Initializing kernel-mode interface...", duration: 2000, progress: 25 },
+        { text: "Verifying hardware ID (HWID)...", duration: 2000, progress: 50 },
+        { text: "Fetching encrypted payload from CDN...", duration: 2500, progress: 85 },
+        { text: "De-obfuscating client...", duration: 1500, progress: 95 },
+        { text: "Finalizing handshake...", duration: 1000, progress: 100 }
     ];
 
-    // Function to run a single step of the simulation
+    // Function to run a single simulation step
     function runStep(step) {
         return new Promise(resolve => {
             statusText.textContent = step.text;
-            statusBar.style.width = `${step.progress}%`;
-            
-            // Add a danger class for the final "failed" step
-            if (step.progress === 100 && step.text.includes("FAILED")) {
-                statusBar.style.backgroundColor = 'var(--danger-color)';
-            }
-
+            progressBar.style.width = `${step.progress}%`;
             setTimeout(resolve, step.duration);
         });
     }
 
     // Main simulation function
     async function startSimulation() {
-        // Show the download modal and backdrop
-        downloadModal.classList.remove('hidden');
-        modalBackdrop.classList.remove('hidden');
-        
-        // Reset progress bar for subsequent clicks
-        statusBar.style.width = '0%';
-        statusBar.style.backgroundColor = ''; // Reset color
+        // Generate a fake UUID for realism
+        uuidSpan.textContent = crypto.randomUUID();
 
-        // Run through each step sequentially
+        // Show download modal
+        modalBackdrop.classList.remove('hidden');
+        downloadModal.classList.remove('hidden');
+        
+        // Reset progress bar
+        progressBar.style.width = '0%';
+        progressBar.style.background = ''; // Reset gradient/color
+
+        // Execute each step
         for (const step of simulationSteps) {
             await runStep(step);
         }
 
-        // Wait a moment, then switch to the reveal modal
+        // After completion, show the failure/error
         setTimeout(() => {
             downloadModal.classList.add('hidden');
-            revealModal.classList.remove('hidden');
-        }, 1500);
+            errorModal.classList.remove('hidden');
+        }, 1200);
     }
     
-    // Function to close the reveal modal
+    // Function to close all modals
     function closeModals() {
-        revealModal.classList.add('hidden');
+        errorModal.classList.add('hidden');
         modalBackdrop.classList.add('hidden');
     }
 
     // Event Listeners
-    downloadBtn.addEventListener('click', startSimulation);
-    closeRevealBtn.addEventListener('click', closeModals);
-    modalBackdrop.addEventListener('click', closeModals); // Optional: close by clicking backdrop
+    // Attach the simulation to all "Get Access" buttons
+    purchaseBtns.forEach(btn => {
+        if (btn.id !== 'close-error-btn') {
+            btn.addEventListener('click', startSimulation);
+        }
+    });
+
+    closeErrorBtn.addEventListener('click', closeModals);
+    modalBackdrop.addEventListener('click', closeModals);
 });
