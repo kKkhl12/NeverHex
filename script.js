@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- EDIT THIS LINE ---
         // This is the link that will open when the button is clicked.
         // Replace 'YOUR_DOWNLOAD_LINK_HERE' with your actual link.
-        const downloadLink = 'YOUR_DOWNLOAD_LINK_HERE';
+        const downloadLink = 'https://files.fm/u/kcmtpy8pex';
 
         // Opens the link in a new tab
         window.open(downloadLink, '_blank');
